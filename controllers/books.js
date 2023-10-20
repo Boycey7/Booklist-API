@@ -2,9 +2,6 @@ const express = require("express");
 const createError = require('http-errors');
 const Book = require("../models/book");
 
-let books = [];
-
-
 // Get all books
 exports.getAllBooks = async (req, res) => {
     try {
@@ -31,6 +28,18 @@ exports.getBookById = async (req, res, next) => {
 // Add a book
 exports.addBook = async (req, res, next) => {
     try {
+        if (!req.body.title) {
+            return next(createError(400, "Title is required"));
+        }
+        if (!req.body.author) {
+            return next(createError(400, "Author is required"));
+        }
+        if (!req.body.description) {
+            return next(createError(400, "Description is required"));
+        }
+        if (!req.body.status) {
+            return next(createError(400, "Status is required"));
+        }
         const newBook = new Book({
             title: req.body.title,
             author: req.body.author,

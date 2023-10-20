@@ -5,29 +5,36 @@ const port = process.env.PORT || 3002;
 const booksRoutes = require("./routes/books");
 const mongoose = require("mongoose");
 
-mongoose.connect(process.env.MONGODBURI, {
+mongoose
+  .connect(process.env.MONGODBURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-}).then (() => {
-    console.log("Connected to mongodb")
-}).catch((err) => {
-    console.log(err)
-}) 
+  })
+  .then(() => {
+    console.log("Connected to mongodb");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 app.use(express.json());
 
 app.use("/books", booksRoutes);
 
 app.get("/", (req, res) => {
-    res.send("Hello World")
-})
+  res.send("Hello World");
+});
 
 app.get("/health", (req, res) => {
-    res.json({
-        status: "ok"
-    })
-})
+  res.json({
+    status: "ok",
+  });
+});
+
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).json({ error: err.message });
+});
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`)
-})
+  console.log(`Server is running on port ${port}`);
+});
